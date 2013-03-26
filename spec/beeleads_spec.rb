@@ -28,7 +28,7 @@ describe Beeleads::Client do
     let(:lead) { { :email => 'sample@example.net', :firstname => 'Tiago' } }
 
     before :each do
-      stub_request(:get, 'https://hive.bldtools.com/api.php/v1/lead/')
+      stub_request(:get, 'https://hive.bldtools.com/api.php/v1/lead/').with(:query => {'token' => 'token', 'affiliate_id' => 123, 'offer_id' => 7})
       subject.lead(lead)
     end
 
