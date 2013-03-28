@@ -10,7 +10,9 @@ module Beeleads
     end
 
     def lead(data)
-      Faraday.get @api_url
+      uri = URI(@api_url)
+      conn = Faraday.new(:url => "#{uri.scheme}://#{uri.host}")
+      conn.get uri.path, {'token' => self.class.token(data), 'affiliate_id' => @api_affiliate_id, 'offer_id' => @api_offer_id}
     end
 
   private

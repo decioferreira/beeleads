@@ -28,12 +28,19 @@ describe Beeleads::Client do
     let(:lead) { { :email => 'sample@example.net', :firstname => 'Tiago' } }
 
     before :each do
+      Beeleads::Client.stub(:token).with(lead) { 'token' }
       stub_request(:get, 'https://hive.bldtools.com/api.php/v1/lead/').with(:query => {'token' => 'token', 'affiliate_id' => 123, 'offer_id' => 7})
       subject.lead(lead)
     end
 
     it 'should make a get request' do
-      a_request(:get, 'https://hive.bldtools.com/api.php/v1/lead/').should have_been_made.once
+      a_request(:get, 'https://hive.bldtools.com/api.php/v1/lead/').with(:query => {'token' => 'token', 'affiliate_id' => 123, 'offer_id' => 7}).should have_been_made.once
+    end
+  end
+
+  describe '.token' do
+    it 'should return the correct token' do
+      pending
     end
   end
 end
