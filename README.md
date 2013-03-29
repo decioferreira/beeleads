@@ -1,6 +1,6 @@
 # Beeleads
 
-TODO: Write a gem description
+A Ruby interface to the Beeleads API.
 
 ## Installation
 
@@ -18,7 +18,19 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+In order to use Beeleads' Lead Integration API (version 1.0) make sure you have the following information:
+
+ * Affiliate ID
+ * API Secret
+ * Offer ID
+
+If you are missing any of this info, please contact suporte@beeleads.com.br.
+
+```ruby
+require 'beeleads'
+client = Beeleads::Client.new({:api_affiliate_id => ENV['API_AFFILIATE_ID'], :api_secret => ENV['API_SECRET'], :api_offer_id => ENV['API_OFFER_ID']})
+client.lead({'email' => 'sample@example.net', 'firstname' => 'Tiago'})
+```
 
 ## Contributing
 
