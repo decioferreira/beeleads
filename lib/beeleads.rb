@@ -1,9 +1,10 @@
 require 'faraday'
+require 'json'
 
 module Beeleads
   class Client
     def initialize(options={})
-      instance_variable_set(:@api_url, 'https://hive.bldtools.com/api.php/v1/lead/')
+      instance_variable_set(:@api_url, 'https://hive.bldstools.com/api.php/v1/lead/')
       self.class.keys.each do |key|
         instance_variable_set(:"@#{key}", options[key]) if options[key]
       end
@@ -11,8 +12,9 @@ module Beeleads
 
     def lead(data)
       uri = URI(@api_url)
-      conn = Faraday.new(:url => "#{uri.scheme}://#{uri.host}")
-      conn.get uri.path, {'token' => self.class.token(data), 'affiliate_id' => @api_affiliate_id, 'offer_id' => @api_offer_id, 'field' => data}
+      conn = Faraday.new(:url => "#{uri.scheme}://#{uri.host}", :ssl => {:verify => false})
+      response = conn.get uri.path, {'token' => self.class.token(@api_secret, data), 'affiliate_id' => @api_affiliate_id, 'offer_id' => @api_offer_id, 'field' => data}
+      JSON.parse(response.body)
     end
 
   private

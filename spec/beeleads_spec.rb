@@ -5,7 +5,7 @@ describe Beeleads::Client do
   describe 'api_url' do
     it 'has a default value' do
       client = Beeleads::Client.new()
-      client.instance_variable_get(:@api_url).should eq('https://hive.bldtools.com/api.php/v1/lead/')
+      client.instance_variable_get(:@api_url).should eq('https://hive.bldstools.com/api.php/v1/lead/')
     end
   end
 
@@ -28,13 +28,21 @@ describe Beeleads::Client do
     let(:lead) { { :email => 'sample@example.net', :firstname => 'Tiago' } }
 
     before :each do
-      Beeleads::Client.stub(:token).with(lead) { 'token' }
-      stub_request(:get, 'https://hive.bldtools.com/api.php/v1/lead/').with(:query => {'token' => 'token', 'affiliate_id' => 123, 'offer_id' => 7, :field => lead})
-      subject.lead(lead)
+      Beeleads::Client.stub(:token).with('secret', lead) { 'token' }
+      stub_request(:get, 'https://hive.bldstools.com/api.php/v1/lead/').with(:query => {'token' => 'token', 'affiliate_id' => 123, 'offer_id' => 7, :field => lead}).to_return(:body => {'result' => 'test'}.to_json)
+      @response = subject.lead(lead)
     end
 
     it 'should make a get request' do
-      a_request(:get, 'https://hive.bldtools.com/api.php/v1/lead/').with(:query => {'token' => 'token', 'affiliate_id' => 123, 'offer_id' => 7, 'field' => lead}).should have_been_made.once
+      a_request(:get, 'https://hive.bldstools.com/api.php/v1/lead/').with(:query => {'token' => 'token', 'affiliate_id' => 123, 'offer_id' => 7, 'field' => lead}).should have_been_made.once
+    end
+
+    it 'should make the request without peer verification' do
+      pending
+    end
+
+    it 'should return JSON parsed body' do
+      @response.should eq({'result' => 'test'})
     end
   end
 
