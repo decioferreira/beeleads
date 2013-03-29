@@ -12,7 +12,7 @@ module Beeleads
     def lead(data)
       uri = URI(@api_url)
       conn = Faraday.new(:url => "#{uri.scheme}://#{uri.host}")
-      conn.get uri.path, {'token' => self.class.token(data), 'affiliate_id' => @api_affiliate_id, 'offer_id' => @api_offer_id}
+      conn.get uri.path, {'token' => self.class.token(data), 'affiliate_id' => @api_affiliate_id, 'offer_id' => @api_offer_id, 'field' => data}
     end
 
   private
@@ -23,6 +23,16 @@ module Beeleads
         :api_secret,
         :api_offer_id
       ]
+    end
+
+    def self.token(secret, data)
+      Digest::SHA1.hexdigest "#{secret}#{self.token_query(data)}"
+    end
+
+    def self.token_query(data)
+      encoded_form_data = URI.encode_www_form(data)
+      # Don't ask me why, but we need to encode the string twice...
+      URI.encode(encoded_form_data)
     end
   end
 end

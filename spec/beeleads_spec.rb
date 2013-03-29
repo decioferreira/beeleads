@@ -29,18 +29,24 @@ describe Beeleads::Client do
 
     before :each do
       Beeleads::Client.stub(:token).with(lead) { 'token' }
-      stub_request(:get, 'https://hive.bldtools.com/api.php/v1/lead/').with(:query => {'token' => 'token', 'affiliate_id' => 123, 'offer_id' => 7})
+      stub_request(:get, 'https://hive.bldtools.com/api.php/v1/lead/').with(:query => {'token' => 'token', 'affiliate_id' => 123, 'offer_id' => 7, :field => lead})
       subject.lead(lead)
     end
 
     it 'should make a get request' do
-      a_request(:get, 'https://hive.bldtools.com/api.php/v1/lead/').with(:query => {'token' => 'token', 'affiliate_id' => 123, 'offer_id' => 7}).should have_been_made.once
+      a_request(:get, 'https://hive.bldtools.com/api.php/v1/lead/').with(:query => {'token' => 'token', 'affiliate_id' => 123, 'offer_id' => 7, 'field' => lead}).should have_been_made.once
     end
   end
 
   describe '.token' do
     it 'should return the correct token' do
-      pending
+      Beeleads::Client.class_eval { token('yoursecret', { :email => 'sample@example.net', :firstname => 'Tiago' }) }.should eq('c474a686e1e404936c8662cb1aa68d45e86995c0')
+    end
+  end
+
+  describe '.token_query' do
+    it 'should return the correct encoded form data' do
+      Beeleads::Client.class_eval { token_query({ :email => 'sample@example.net', :firstname => 'Tiago' }) }.should eq('email=sample%2540example.net&firstname=Tiago')
     end
   end
 end
