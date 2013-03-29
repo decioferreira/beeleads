@@ -33,8 +33,6 @@ module Beeleads
 
     def self.token_query(data)
       encoded_form_data = URI.encode_www_form(data)
-      # Don't ask me why, but we need to encode the string twice...
-      URI.encode(encoded_form_data)
     end
   end
 end

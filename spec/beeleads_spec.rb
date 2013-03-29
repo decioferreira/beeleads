@@ -48,13 +48,13 @@ describe Beeleads::Client do
 
   describe '.token' do
     it 'should return the correct token' do
-      Beeleads::Client.class_eval { token('yoursecret', { :email => 'sample@example.net', :firstname => 'Tiago' }) }.should eq('c474a686e1e404936c8662cb1aa68d45e86995c0')
+      Beeleads::Client.class_eval { token('yoursecret', { :email => 'sample@example.net', :firstname => 'Tiago' }) }.should eq('534da26a597e62b65b25711eb200197fc59ceb14')
     end
   end
 
   describe '.token_query' do
     it 'should return the correct encoded form data' do
-      Beeleads::Client.class_eval { token_query({ :email => 'sample@example.net', :firstname => 'Tiago' }) }.should eq('email=sample%2540example.net&firstname=Tiago')
+      Beeleads::Client.class_eval { token_query({ :email => 'sample@example.net', :firstname => 'Tiago' }) }.should eq('email=sample%40example.net&firstname=Tiago')
     end
   end
 end
