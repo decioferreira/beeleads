@@ -1,5 +1,7 @@
 # Beeleads
 
+[![Build Status](https://travis-ci.org/decioferreira/beeleads.png?branch=master)](https://travis-ci.org/decioferreira/beeleads)
+
 A Ruby interface to the Beeleads API.
 
 ## Installation
