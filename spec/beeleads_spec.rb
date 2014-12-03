@@ -62,12 +62,23 @@ describe Beeleads::Client do
   end
 
   describe '.token_query' do
+    def token_query(params)
+      Beeleads::Client.class_eval { token_query(params) }
+    end
+
     it 'should return the correct encoded form data' do
-      Beeleads::Client.class_eval { token_query({ :email => 'sample@example.net', :firstname => 'Tiago' }) }.should eq('email=sample%40example.net&firstname=Tiago')
+      token_query({ :email => 'sample@example.net', :firstname => 'Tiago' }).
+        should eq('email=sample%40example.net&firstname=Tiago')
+    end
+
+    it 'should convert nil to "" (empty string)' do
+      token_query({ :email => 'sample@example.net', :firstname => nil}).
+        should eq('email=sample%40example.net&firstname=')
     end
 
     it 'has keys in alphabetical order' do
-      Beeleads::Client.class_eval { token_query({ :firstname => 'Tiago', :email => 'sample@example.net' }) }.should eq('email=sample%40example.net&firstname=Tiago')
+      token_query({ :firstname => 'Tiago', :email => 'sample@example.net' }).
+        should eq('email=sample%40example.net&firstname=Tiago')
     end
   end
 end

@@ -32,8 +32,12 @@ module Beeleads
     end
 
     def self.token_query(data)
-      sorted_data = Hash[data.sort_by(&:first)]
-      URI.encode_www_form(sorted_data)
+      URI.encode_www_form(sanitized_data(data))
+    end
+
+    def self.sanitized_data(data)
+      data_without_nil = Hash[data.map{ |k, v| [k, v || ''] }]
+      Hash[data_without_nil.sort_by(&:first)]
     end
   end
 end
