@@ -32,7 +32,8 @@ module Beeleads
     end
 
     def self.token_query(data)
-      encoded_form_data = URI.encode_www_form(data)
+      sorted_data = Hash[data.sort_by(&:first)]
+      URI.encode_www_form(sorted_data)
     end
   end
 end
