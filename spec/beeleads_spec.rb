@@ -5,7 +5,7 @@ describe Beeleads::Client do
   describe 'api_url' do
     it 'has a default value' do
       client = Beeleads::Client.new()
-      client.instance_variable_get(:@api_url).should eq('https://hive.bldstools.com/api.php/v1/lead/')
+      expect(client.instance_variable_get(:@api_url)).to eq('https://hive.bldstools.com/api.php/v1/lead/')
     end
   end
 
@@ -13,13 +13,13 @@ describe Beeleads::Client do
     %w(api_url api_affiliate_id api_secret api_offer_id).each do |k|
       it 'should set the #{k} option' do
         client = Beeleads::Client.new({k.to_sym => k})
-        client.instance_variable_get(:"@#{k}").should eq(k)
+        expect(client.instance_variable_get(:"@#{k}")).to eq(k)
       end
     end
 
     it 'should not set the any_other option' do
       client = Beeleads::Client.new({:any_other => 'something'})
-      client.instance_variable_get(:@any_other).should be_nil
+      expect(client.instance_variable_get(:@any_other)).to be_nil
     end
   end
 
@@ -28,21 +28,19 @@ describe Beeleads::Client do
     let(:lead) { { :email => 'sample@example.net', :firstname => 'Tiago' } }
 
     before :each do
-      Beeleads::Client.stub(:token).with('secret', lead) { 'token' }
+      allow(Beeleads::Client).to receive(:token).with('secret', lead) { 'token' }
       stub_request(:get, 'https://hive.bldstools.com/api.php/v1/lead/').with(:query => {'token' => 'token', 'affiliate_id' => 123, 'offer_id' => 7, :field => lead}).to_return(:body => {'result' => 'test'}.to_json)
       @response = subject.lead(lead)
     end
 
     it 'should make a get request' do
-      a_request(:get, 'https://hive.bldstools.com/api.php/v1/lead/').with(:query => {'token' => 'token', 'affiliate_id' => 123, 'offer_id' => 7, 'field' => lead}).should have_been_made.once
+      expect(a_request(:get, 'https://hive.bldstools.com/api.php/v1/lead/').with(:query => {'token' => 'token', 'affiliate_id' => 123, 'offer_id' => 7, 'field' => lead})).to have_been_made.once
     end
 
-    it 'should make the request without peer verification' do
-      pending
-    end
+    xit 'should make the request without peer verification'
 
     it 'should return JSON parsed body' do
-      @response.should eq({'result' => 'test'})
+      expect(@response).to eq({'result' => 'test'})
     end
   end
 
@@ -52,12 +50,12 @@ describe Beeleads::Client do
     end
 
     it 'should return the correct token' do
-      beeleads_token({ :email => 'sample@example.net', :firstname => 'Tiago' }).should eq('534da26a597e62b65b25711eb200197fc59ceb14')
+      expect(beeleads_token({ :email => 'sample@example.net', :firstname => 'Tiago' })).to eq('534da26a597e62b65b25711eb200197fc59ceb14')
     end
 
     it 'should return the same token when the params order are different' do
-      beeleads_token({ :email => 'sample@example.net', :firstname => 'Tiago' }).
-        should eq(beeleads_token({ :firstname => 'Tiago', :email => 'sample@example.net' }))
+      expect(beeleads_token({ :email => 'sample@example.net', :firstname => 'Tiago' })).
+        to eq(beeleads_token({ :firstname => 'Tiago', :email => 'sample@example.net' }))
     end
   end
 
@@ -67,18 +65,18 @@ describe Beeleads::Client do
     end
 
     it 'should return the correct encoded form data' do
-      token_query({ :email => 'sample@example.net', :firstname => 'Tiago' }).
-        should eq('email=sample%40example.net&firstname=Tiago')
+      expect(token_query({ :email => 'sample@example.net', :firstname => 'Tiago' })).
+        to eq('email=sample%40example.net&firstname=Tiago')
     end
 
     it 'should convert nil to "" (empty string)' do
-      token_query({ :email => 'sample@example.net', :firstname => nil}).
-        should eq('email=sample%40example.net&firstname=')
+      expect(token_query({ :email => 'sample@example.net', :firstname => nil})).
+        to eq('email=sample%40example.net&firstname=')
     end
 
     it 'has keys in alphabetical order' do
-      token_query({ :firstname => 'Tiago', :email => 'sample@example.net' }).
-        should eq('email=sample%40example.net&firstname=Tiago')
+      expect(token_query({ :firstname => 'Tiago', :email => 'sample@example.net' })).
+        to eq('email=sample%40example.net&firstname=Tiago')
     end
   end
 end
